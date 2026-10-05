@@ -27,8 +27,12 @@ Vercel deployment: DONE (live)
   evidence: `vercel deploy --prod --yes` -> `✓ Ready in 43s`;
             `GET https://defence-crm-alpha.vercel.app/ -> 200`, contains "Morning view".
 
-Step 1.2 (login, roles, DB-enforced access): BLOCKED
-  evidence: the app has no anon key yet, so it cannot authenticate or read settings through RLS.
+Database read through the app (Step 1.1 end-to-end): DONE
+  evidence: local `GET /settings -> 200` and live `GET https://defence-crm-alpha.vercel.app/settings -> 200`,
+            both rendering "Stored settings" with `company_name` and `gst_rate` from Postgres.
+
+Step 1.2 (login, roles, DB-enforced access): IN PROGRESS
+  evidence: code being built next; live login needs an owner user created in Supabase Auth.
 
 ## What broke and how I fixed it
 
@@ -42,7 +46,8 @@ Step 1.2 (login, roles, DB-enforced access): BLOCKED
 - "Missing and Failed states are distinct" — proven: two different env situations produced two different pages.
 - "migration 0001 applies and creates the schema" — proven: the runner printed the three tables, 12 settings rows, and the audit trigger.
 - "settings persist in Postgres" — proven at the database level (12 rows written by SQL).
-- "the app reads settings from Postgres over RLS" — NOT yet. Needs the anon key and a signed-in user. UNVERIFIED.
+- "the app reads settings from Postgres over the API" — proven: local and live /settings rendered the stored rows. This used the anon-read policy added in 0002, so it is configuration only, not role-sensitive data.
+- "role-based access is enforced in the database" — the policies exist (proven by db-status); exercising them with a real signed-in user is UNVERIFIED until Step 1.2 lands.
 - "code is on GitHub" — proven: remote branch hash returned.
 - "the site is live" — proven: production alias returned 200 now.
 - "Vercel production has the Supabase env vars" — NOT DONE yet.

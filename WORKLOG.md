@@ -63,3 +63,9 @@ Added the Supabase URL to Vercel production -> `vercel env add NEXT_PUBLIC_SUPAB
 Allowed anonymous read of the non-sensitive settings table -> `node --env-file=.env.local scripts/apply-migration.mjs 0002_settings_anon_read.sql` -> `applied: 0002_settings_anon_read.sql`
 
 Printed the real schema and policies -> `node --env-file=.env.local scripts/db-status.mjs` -> `settings rows: 12`; policies listed including `settings.settings_anon_read [SELECT] roles={anon}` and `settings.settings_read [SELECT] roles={authenticated}`
+
+Added the publishable key and read settings through the API -> `GET http://localhost:3000/settings` -> `200 len=32722`, `Stored settings: True`, `company_name: True`, `gst_rate: True`, `Missing state absent: True`
+
+Added the key to Vercel and redeployed -> `vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY production` + `vercel deploy --prod --yes` -> `✓ Added`, `✓ Ready in 43s`, alias `https://defence-crm-alpha.vercel.app`
+
+Verified the live site reads the database -> `GET https://defence-crm-alpha.vercel.app/settings` -> `200 len=15002`, `Stored settings: True`, `company_name: True`, `gst_rate: True`
