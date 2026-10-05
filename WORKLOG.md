@@ -57,3 +57,9 @@ Verified the remote branch -> `git ls-remote --heads origin` -> `564643b80888495
 Deployed to Vercel -> `npx.cmd vercel deploy --prod --yes` -> `✓ Ready in 43s`, production alias `https://defence-crm-alpha.vercel.app`, exit 0
 
 Fetched the live site -> `Invoke-WebRequest https://defence-crm-alpha.vercel.app/` -> `GET / -> 200`, `Morning view: True`
+
+Added the Supabase URL to Vercel production -> `vercel env add NEXT_PUBLIC_SUPABASE_URL production` -> `✓ Added NEXT_PUBLIC_SUPABASE_URL`, environments Production
+
+Allowed anonymous read of the non-sensitive settings table -> `node --env-file=.env.local scripts/apply-migration.mjs 0002_settings_anon_read.sql` -> `applied: 0002_settings_anon_read.sql`
+
+Printed the real schema and policies -> `node --env-file=.env.local scripts/db-status.mjs` -> `settings rows: 12`; policies listed including `settings.settings_anon_read [SELECT] roles={anon}` and `settings.settings_read [SELECT] roles={authenticated}`
