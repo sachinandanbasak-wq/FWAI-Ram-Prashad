@@ -3,50 +3,55 @@
 ## Status per part
 
 Planning documents (Steps 1-3): DONE
-  evidence: PRD.md (28289 bytes), TECH-STACK.md (11087 bytes), IMPLEMENTATION-PLAN.md (16526 bytes); user approved both gates.
+  evidence: PRD.md, TECH-STACK.md, IMPLEMENTATION-PLAN.md; both approval gates passed.
 
-Phase 1 — Step 1.1 live shell: DONE
-  evidence: `npm.cmd run dev` ready on port 3000;
-            `GET http://localhost:3000/ -> 200 len=32929`, contains "Morning view" and the eight morning-view tiles;
-            `GET http://localhost:3000/settings -> 200 len=18953`.
+Step 1.1 app shell: DONE
+  evidence: `GET http://localhost:3000/ -> 200 len=32929`; `GET /settings -> 200 len=18953`; `npm.cmd run build` compiled, pages 4/4.
 
 Three distinct screen states: 2 of 3 VERIFIED
-  missing setting: DONE — with no .env.local, both pages show "A setting is missing" naming NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.
-  failed call:     DONE — with a temporary .env.local pointing at http://127.0.0.1:9, /settings returned 200 with "Could not load settings" and "Nothing was changed".
-  empty table:     IMPLEMENTED, UNVERIFIED — needs a real database with the settings table present and zero rows.
+  Missing: DONE — both pages name the two absent settings.
+  Failed:  DONE — unreachable database produced "Could not load settings".
+  Empty:   IMPLEMENTED, UNVERIFIED — needs a signed-in read against the real table.
 
-Production build: DONE
-  evidence: `npm.cmd run build` -> "Compiled successfully in 7.5s", "Generating static pages (4/4)",
-            routes `/` (static) and `/settings` (dynamic).
+Database migration 0001: DONE (applied to the live Supabase project)
+  evidence: `node --env-file=.env.local scripts/apply-migration.mjs 0001_init.sql` ->
+            `connected: ok`, `public tables: audit_log, profiles, settings`,
+            `settings rows: 12`, `audit_settings trigger: 1`.
 
-Database migration 0001_init.sql: WRITTEN, UNVERIFIED
-  evidence: file `supabase/migrations/0001_init.sql` created.
-  Cannot be applied or proven without a Supabase project and keys.
+Git repository: DONE
+  evidence: `git push -u origin main` -> `* [new branch] main -> main`;
+            `git ls-remote --heads origin` -> `564643b... refs/heads/main`.
+  Secrets stayed out: `.env.local` ignored, only `.env.example` staged.
 
-Phase 1 — Steps 1.2 to 1.6 (auth/roles, masters, RFI + line grid, import): BLOCKED
-  evidence: no Supabase project or keys exist in this environment, so no table can be created and no persistence can be proven.
+Vercel deployment: DONE (live)
+  evidence: `vercel deploy --prod --yes` -> `✓ Ready in 43s`;
+            `GET https://defence-crm-alpha.vercel.app/ -> 200`, contains "Morning view".
+
+Step 1.2 (login, roles, DB-enforced access): BLOCKED
+  evidence: the app has no anon key yet, so it cannot authenticate or read settings through RLS.
 
 ## What broke and how I fixed it
 
-- `npm.ps1` is blocked by the machine execution policy. Fixed by using `npm.cmd` for every npm command.
-- First production build failed: `lib/config.ts:21` — TypeScript could not narrow `string | undefined` from a `missing.length` check. Fixed by making the guard `if (!url || !key)` so both values narrow; this also forced the second error out.
-- Second build failed: `lib/settings.ts:22` — after the `configured` guard, `config.missing` no longer exists on the type. Fixed by returning an honest failure state ("The database client could not be created.") instead of reading a field that cannot be there.
-- npm 11 blocked `esbuild`'s postinstall script. It is only needed by Vitest, which is not used yet; to be resolved with `npm approve-scripts` when tests begin.
+- `npm.ps1` blocked by execution policy -> used `npm.cmd` throughout.
+- Two TypeScript narrowing errors in `lib/config.ts` and `lib/settings.ts` -> fixed the guards; production build then passed.
+- npm 11 blocked `esbuild`'s postinstall (Vitest-only) -> deferred until tests begin.
 
 ## Claims ledger
 
-- "the app runs and serves the dashboard at localhost:3000" — proven: `GET / -> 200`, content checks listed above.
-- "the Missing state names both settings" — proven: `/` and `/settings` both contain the two env var names with no .env.local.
-- "the Failed state is distinct from Missing" — proven: temporary bad env produced "Could not load settings"; Missing text was absent.
-- "changes build in production mode" — proven: `next build` compiled and generated 4/4 pages.
-- "data persists in Postgres" — NOT PROVEN. No database is connected. UNVERIFIED.
-- "migration 0001 applies cleanly" — NOT PROVEN. UNVERIFIED.
-- "the app is deployed to a public URL" — NOT DONE. No Vercel login available in this environment.
+- "app serves the shell locally" — proven: `GET / -> 200`.
+- "Missing and Failed states are distinct" — proven: two different env situations produced two different pages.
+- "migration 0001 applies and creates the schema" — proven: the runner printed the three tables, 12 settings rows, and the audit trigger.
+- "settings persist in Postgres" — proven at the database level (12 rows written by SQL).
+- "the app reads settings from Postgres over RLS" — NOT yet. Needs the anon key and a signed-in user. UNVERIFIED.
+- "code is on GitHub" — proven: remote branch hash returned.
+- "the site is live" — proven: production alias returned 200 now.
+- "Vercel production has the Supabase env vars" — NOT DONE yet.
+- "deployment protection status" — Vercel warned protection is on, yet the alias returned 200; treat as a setting to confirm in the Vercel dashboard.
 
 ## What I would tell the next person
 
-1. The app lives at the project root (`defence-crm/`); run it with `npm.cmd run dev` (use `npm.cmd`, not `npm`).
-2. Copy `.env.example` to `.env.local` and fill in `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`, then run `supabase/migrations/0001_init.sql` in the SQL editor. That unblocks Step 1.2.
-3. The service-role key (needed for the first user creation and migrations) must live only in a server-side variable, never `NEXT_PUBLIC_`, and never in the repo.
-4. The three states are deliberate and must stay visually distinct: amber Missing, neutral Empty, red Failed.
-5. No example business data is shown anywhere; the dashboard tiles carry an em dash and "No data yet".
+1. Run the app with `npm.cmd run dev`; deploy with `npx.cmd vercel deploy --prod`.
+2. `.env.local` (git-ignored) holds the Supabase URL, the DB connection string, and the Vercel token. Rotate the DB password and the Vercel token — both were shared in plain research chat.
+3. To finish Step 1.1 as an end-to-end proof, add `NEXT_PUBLIC_SUPABASE_ANON_KEY` to `.env.local`, create the owner user in Supabase Auth, insert the matching `profiles` row with `role = 'owner'`, then log in and read the 12 settings.
+4. `settings` RLS is authenticated-only by design; an anonymous read returns nothing. That is correct, not a bug.
+5. Every reminder: no example business data is shown anywhere.

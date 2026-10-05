@@ -15,3 +15,5 @@ next-env.d.ts
 
 # Keep the whole .kilo tree ignored except nothing needed here
 .kilo/
+
+.vercel
