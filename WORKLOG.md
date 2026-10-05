@@ -69,3 +69,15 @@ Added the publishable key and read settings through the API -> `GET http://local
 Added the key to Vercel and redeployed -> `vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY production` + `vercel deploy --prod --yes` -> `✓ Added`, `✓ Ready in 43s`, alias `https://defence-crm-alpha.vercel.app`
 
 Verified the live site reads the database -> `GET https://defence-crm-alpha.vercel.app/settings` -> `200 len=15002`, `Stored settings: True`, `company_name: True`, `gst_rate: True`
+
+## Phase 1, Step 1.2 — login, roles, route protection
+
+Installed the auth helper -> `npm.cmd install @supabase/ssr` -> `added 2 packages in 5s`
+
+Wrote the auth layer -> `write` lib/supabase/server.ts, lib/supabase/client.ts, middleware.ts, app/login/actions.ts, app/auth/actions.ts, app/login/page.tsx, app/layout.tsx, app/settings/page.tsx -> created
+
+Build failed on a OneDrive symlink -> `npm.cmd run build` -> `EINVAL: invalid argument, readlink '...\.next\server\vendor-chunks'`; guessed the dev server was holding `.next` while the build wrote to it
+
+Stopped the dev server and cleared `.next`, rebuilt -> `Remove-Item .next` + `npm.cmd run build` -> `✓ Compiled successfully in 29.6s`, routes `/`, `/login`, `/settings`, `Middleware 94.8 kB`
+
+Restarted and tested the signed-out flows -> `Invoke-WebRequest` -> `GET /login -> 200 len=19053` with the email field; `GET /settings -> 307` (redirect to login); `GET / -> 200` with a "Sign in" link

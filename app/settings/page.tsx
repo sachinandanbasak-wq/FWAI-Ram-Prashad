@@ -1,10 +1,31 @@
 import { loadSettings } from "@/lib/settings";
 import { EmptyState, FailedState, MissingState } from "@/components/States";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
   const result = await loadSettings();
+
+  // Reading the signed-in profile proves the cookie-based client works and shows
+  // the role the database treats this user as.
+  const supabase = await createSupabaseServerClient();
+  let role: string | null = null;
+  let fullName: string | null = null;
+  if (supabase) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (user) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role, full_name")
+        .eq("id", user.id)
+        .maybeSingle();
+      role = (profile as { role?: string } | null)?.role ?? null;
+      fullName = (profile as { full_name?: string } | null)?.full_name ?? null;
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -15,6 +36,16 @@ export default async function SettingsPage() {
           hard-coded. Changing a setting changes behaviour without a rebuild.
         </p>
       </section>
+
+      {fullName && (
+        <p className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700">
+          Signed in as <strong>{fullName}</strong> — role{" "}
+          <span className="rounded bg-slate-100 px-1.5 py-0.5 font-medium">
+            {role ?? "no role assigned"}
+          </span>
+          . Only the Owner can change these settings.
+        </p>
+      )}
 
       {result.status === "missing" && (
         <MissingState
@@ -34,13 +65,15 @@ export default async function SettingsPage() {
       {result.status === "empty" && (
         <EmptyState
           title="No settings found"
-          message="The settings table exists but has no rows. Run supabase/migrations/0001_init.sql and supabase/seed.sql to create the defaults."
+          message="The settings table exists but has no rows. Run supabase/migrations/0001_init.sql to create the defaults."
         />
       )}
 
       {result.status === "ok" && (
         <div className="card">
-          <h2 className="text-lg font-semibold">Stored settings</h2>
+          <h2 className="text-lg font-semibold">
+            Stored settings ({Object.keys(result.settings).length})
+          </h2>
           <ul className="mt-3 divide-y divide-slate-100">
             {Object.entries(result.settings).map(([key, value]) => (
               <li key={key} className="flex items-start justify-between gap-4 py-2">
