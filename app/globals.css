@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --page: #f6f7f9;
+}
+
+body {
+  background: var(--page);
+  color: #1f2933;
+  font-family: ui-sans-serif, system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+.card {
+  @apply rounded-lg border border-slate-200 bg-white p-5 shadow-sm;
+}
+
+.nav-link {
+  @apply rounded px-3 py-1.5 text-sm text-slate-200 hover:bg-white/10 hover:text-white;
+}
+
+/* Consistent colour language from PRD §5: green on track, amber at risk,
+   red late/blocked, grey indication only. */
+.state-missing {
+  @apply border-amber-300 bg-amber-50 text-amber-900;
+}
+.state-empty {
+  @apply border-slate-300 bg-white text-slate-700;
+}
+.state-failed {
+  @apply border-red-300 bg-red-50 text-red-900;
+}

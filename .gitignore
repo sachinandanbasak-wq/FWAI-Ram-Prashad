@@ -1,0 +1,17 @@
+node_modules/
+.next/
+out/
+build/
+.DS_Store
+
+# Local secrets — never commit
+.env
+.env.local
+.env*.local
+
+# TypeScript / Next
+next-env.d.ts
+*.tsbuildinfo
+
+# Keep the whole .kilo tree ignored except nothing needed here
+.kilo/
