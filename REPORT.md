@@ -31,8 +31,15 @@ Database read through the app (Step 1.1 end-to-end): DONE
   evidence: local `GET /settings -> 200` and live `GET https://defence-crm-alpha.vercel.app/settings -> 200`,
             both rendering "Stored settings" with `company_name` and `gst_rate` from Postgres.
 
-Step 1.2 (login, roles, DB-enforced access): IN PROGRESS
-  evidence: code being built next; live login needs an owner user created in Supabase Auth.
+Step 1.2 (login, roles, route protection): BUILT, signed-in path UNVERIFIED
+  evidence: build passes with `Middleware`; `GET /login -> 200` (form present), `GET /settings -> 307` when signed out.
+  signed-in login, role display and role-based write: UNVERIFIED — no auth user exists; the user chose to skip sign-in verification for now.
+
+Step 1.3 (Customer / OEM / Product masters): DONE at the database, BUILT at the screen
+  evidence: migration 0003 applied — `customers, oem_certificates, oem_contacts, oems, products` now exist.
+  rules proven: `node scripts/test-rules.mjs` -> 12 bad-data cases rejected (`23514`/`23503`), 3 good accepted, `ALL RULES PASS`, exit 0.
+  screens built: `/masters`, `/masters/customers`, `/masters/oems`, `/masters/products`; all four return `307` when signed out, so their rendered content is UNVERIFIED until a login exists.
+  known gap: Excel export on the master lists is not built yet (next).
 
 ## What broke and how I fixed it
 

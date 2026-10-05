@@ -1,8 +1,11 @@
-// Applies a SQL migration file to the database in DATABASE_URL and prints the
-// resulting schema so the change is proven, not assumed.
+// Applies a SQL file to the database in DATABASE_URL and prints the resulting
+// schema so the change is proven, not assumed.
 //
-// Usage: node --env-file=.env.local scripts/apply-migration.mjs 0001_init.sql
-import { readFileSync } from "node:fs";
+// The argument may be a path relative to the project root (e.g. supabase/seed.sql)
+// or a bare filename found in supabase/migrations (e.g. 0001_init.sql).
+//
+// Usage: node --env-file=.env.local scripts/apply-migration.mjs <file.sql>
+import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import pg from "pg";
@@ -22,7 +25,15 @@ if (!url) {
 }
 
 const here = dirname(fileURLToPath(import.meta.url));
-const sqlPath = join(here, "..", "supabase", "migrations", file);
+const asGiven = join(process.cwd(), file);
+const inMigrations = join(here, "..", "supabase", "migrations", file);
+const sqlPath = existsSync(asGiven) ? asGiven : inMigrations;
+
+if (!existsSync(sqlPath)) {
+  console.error(`SQL file not found: ${file}`);
+  process.exit(1);
+}
+
 const sql = readFileSync(sqlPath, "utf8");
 
 const client = new Client({ connectionString: url, ssl: { rejectUnauthorized: false } });
@@ -37,14 +48,6 @@ try {
     "select table_name from information_schema.tables where table_schema = 'public' order by table_name",
   );
   console.log("public tables:", tables.rows.map((r) => r.table_name).join(", ") || "(none)");
-
-  const settings = await client.query("select count(*)::int as n from public.settings");
-  console.log("settings rows:", settings.rows[0].n);
-
-  const trigger = await client.query(
-    "select count(*)::int as n from pg_trigger where tgname = 'audit_settings'",
-  );
-  console.log("audit_settings trigger:", trigger.rows[0].n);
 } catch (error) {
   console.error("FAILED:", error.message);
   process.exitCode = 1;

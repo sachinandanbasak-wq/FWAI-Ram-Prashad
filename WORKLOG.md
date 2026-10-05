@@ -81,3 +81,21 @@ Build failed on a OneDrive symlink -> `npm.cmd run build` -> `EINVAL: invalid ar
 Stopped the dev server and cleared `.next`, rebuilt -> `Remove-Item .next` + `npm.cmd run build` -> `✓ Compiled successfully in 29.6s`, routes `/`, `/login`, `/settings`, `Middleware 94.8 kB`
 
 Restarted and tested the signed-out flows -> `Invoke-WebRequest` -> `GET /login -> 200 len=19053` with the email field; `GET /settings -> 307` (redirect to login); `GET / -> 200` with a "Sign in" link
+
+## Phase 1, Step 1.3 — masters
+
+Wrote migration 0003 -> `write supabase/migrations/0003_masters.sql` -> customers, oems, oem_contacts, oem_certificates, products; CHECK rules, FKs, audit triggers, RLS (read for any signed-in user, write for Owner/Operations)
+
+Wrote the rule-test harness -> `write scripts/test-rules.mjs` -> tries to insert bad data and asserts each is rejected, all inside rolled-back transactions
+
+Applied the migration -> `node --env-file=.env.local scripts/apply-migration.mjs 0003_masters.sql` -> `applied: 0003_masters.sql`, tables now include customers, oem_certificates, oem_contacts, oems, products
+
+Seeded SAMPLE rows -> `node --env-file=.env.local scripts/apply-migration.mjs supabase/seed.sql` -> applied; every row prefixed "SAMPLE ... (do not use)"
+
+Proved the database rules -> `node --env-file=.env.local scripts/test-rules.mjs` -> 12 bad-data cases rejected (`23514` check, `23503` foreign key), 3 good-data cases accepted, `ALL RULES PASS`, exit 0
+
+Wrote the masters UI -> `write` app/masters/page.tsx, app/masters/{customers,oems,products}/page.tsx, app/masters/actions.ts; protected `/masters` in middleware; added the nav link
+
+Built with the new routes -> `npm.cmd run build` -> `✓ Compiled successfully in 32.5s`, routes `/masters`, `/masters/customers`, `/masters/oems`, `/masters/products` all present
+
+Tested route protection -> `Invoke-WebRequest -MaximumRedirection 0` -> `GET /masters -> 307`, `/masters/customers -> 307`, `/masters/oems -> 307`, `/masters/products -> 307`; `GET / -> 200` with a Masters link

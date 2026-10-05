@@ -46,6 +46,9 @@ export default async function RootLayout({
               <Link href="/" className="nav-link">
                 Dashboard
               </Link>
+              <Link href="/masters" className="nav-link">
+                Masters
+              </Link>
               <Link href="/settings" className="nav-link">
                 Settings
               </Link>

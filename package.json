@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:rules": "node --env-file=.env.local scripts/test-rules.mjs",
+    "db:status": "node --env-file=.env.local scripts/db-status.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
