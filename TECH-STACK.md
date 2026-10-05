@@ -106,7 +106,7 @@ Rejected: a client-side JS PDF library (font/₹ formatting and pagination probl
 
 ## 8. Excel import and export
 
-**Choice: `xlsx` (SheetJS) on the server** for both import and export.
+**Choice: `exceljs` on the server** for both import and export. (Changed from SheetJS during Phase 1: the `xlsx` package published to npm is unmaintained and carries known advisories; `exceljs` is actively maintained and covers read and write.)
 
 Constraint: the import wizard needs upload → map columns → preview with flagged errors → confirm, and the history lives in `.xlsx` files. Every list/report needs an Excel export.
 

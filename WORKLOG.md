@@ -99,3 +99,17 @@ Wrote the masters UI -> `write` app/masters/page.tsx, app/masters/{customers,oem
 Built with the new routes -> `npm.cmd run build` -> `✓ Compiled successfully in 32.5s`, routes `/masters`, `/masters/customers`, `/masters/oems`, `/masters/products` all present
 
 Tested route protection -> `Invoke-WebRequest -MaximumRedirection 0` -> `GET /masters -> 307`, `/masters/customers -> 307`, `/masters/oems -> 307`, `/masters/products -> 307`; `GET / -> 200` with a Masters link
+
+## Phase 1, Step 1.3b — Excel export
+
+Chose exceljs over SheetJS -> `npm.cmd install exceljs` -> `added 96 packages in 24s`; edited TECH-STACK.md §8 to record the change and the reason (the npm `xlsx` build is unmaintained)
+
+Wrote the export layer -> `write lib/export.ts, app/masters/export/[entity]/route.ts, scripts/export-check.mjs`; added "Export to Excel" links to the three lists
+
+Proved the export on real rows -> `node --env-file=.env.local scripts/export-check.mjs` -> `rows read from database: 2`, `bytes: 6671`, `reopened sheet: Customers`, `reopened rows (including header): 3`, `first header cell: Name`
+
+Build failed on one cast -> `npm.cmd run build` -> `Type error: ... route.ts:40 Conversion of type ... may be a mistake`; fixed by casting through `unknown`, re-ran
+
+Build passed -> `npm.cmd run build` -> `✓ Compiled successfully`, route `/masters/export/[entity]` listed
+
+Tested export route protection -> `GET /masters/export/customers -> 307`, `/oems -> 307`, `/products -> 307`

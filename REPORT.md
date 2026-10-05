@@ -39,7 +39,7 @@ Step 1.3 (Customer / OEM / Product masters): DONE at the database, BUILT at the 
   evidence: migration 0003 applied — `customers, oem_certificates, oem_contacts, oems, products` now exist.
   rules proven: `node scripts/test-rules.mjs` -> 12 bad-data cases rejected (`23514`/`23503`), 3 good accepted, `ALL RULES PASS`, exit 0.
   screens built: `/masters`, `/masters/customers`, `/masters/oems`, `/masters/products`; all four return `307` when signed out, so their rendered content is UNVERIFIED until a login exists.
-  known gap: Excel export on the master lists is not built yet (next).
+  Excel export: DONE — `scripts/export-check.mjs` read 2 real rows, wrote a 6671-byte .xlsx, and re-opened it ("Customers", 3 rows including header). The route `/masters/export/[entity]` is built and returns `307` when signed out.
 
 ## What broke and how I fixed it
 
