@@ -88,6 +88,12 @@ export default function DemoPage() {
         </div>
       </section>
 
+      <div className="flex flex-wrap gap-3">
+        <a href="/demo/customers" className="btn-primary">
+          Customers &amp; Follow-ups demo
+        </a>
+      </div>
+
       <RequirementsTable rows={SAMPLE_REQUIREMENTS} sample />
 
       <p className="text-xs text-slate-500">

@@ -12,7 +12,13 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function Sidebar({ companyName }: { companyName: string | null }) {
+export function Sidebar({
+  companyName,
+  onNavigate,
+}: {
+  companyName: string | null;
+  onNavigate?: () => void;
+}) {
   const pathname = usePathname();
 
   return (
@@ -58,6 +64,7 @@ export function Sidebar({ companyName }: { companyName: string | null }) {
                   <li key={item.href}>
                     <Link
                       href={item.href}
+                      onClick={onNavigate}
                       className={
                         active
                           ? "flex items-center rounded bg-accent/15 px-2 py-1.5 text-sm font-medium text-white ring-1 ring-inset ring-accent/40"

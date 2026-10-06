@@ -28,7 +28,7 @@ export const NAV: NavGroup[] = [
   {
     title: "Intelligence",
     items: [
-      { label: "Follow-ups", href: "/follow-ups", ready: false },
+      { label: "Follow-ups", href: "/follow-ups", ready: true },
       { label: "Historical Intelligence", href: "/historical", ready: false },
       { label: "Ask Your Business", href: "/ask", ready: false },
     ],

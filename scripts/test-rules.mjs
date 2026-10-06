@@ -18,6 +18,8 @@ if (!url) {
 const MUST_REJECT = [
   { label: "customer name empty", sql: "insert into public.customers (name) values ('')" },
   { label: "customer name only spaces", sql: "insert into public.customers (name) values ('   ')" },
+  { label: "customer source not in list", sql: "insert into public.customers (name, source) values ('SAMPLE bad source', 'Carrier pigeon')" },
+  { label: "customer stage not in list", sql: "insert into public.customers (name, stage) values ('SAMPLE bad stage', 'Nonsense')" },
   { label: "OEM name empty", sql: "insert into public.oems (name) values ('')" },
   { label: "OEM commission above 100", sql: "insert into public.oems (name, commission_percent) values ('SAMPLE bad', 150)" },
   { label: "OEM commission below 0", sql: "insert into public.oems (name, commission_percent) values ('SAMPLE bad', -1)" },
@@ -39,6 +41,7 @@ const MUST_REJECT = [
 /** Each case is data that MUST be accepted. */
 const MUST_ACCEPT = [
   { label: "valid customer", sql: "insert into public.customers (name) values ('SAMPLE valid customer')" },
+  { label: "valid customer pipeline fields", sql: "insert into public.customers (name, phone, source, stage) values ('SAMPLE valid pipeline', '+91-9000000000', 'Referral', 'Quoted')" },
   { label: "valid OEM", sql: "insert into public.oems (name, commission_percent) values ('SAMPLE valid oem', 5)" },
   { label: "valid product", sql: "insert into public.products (description, uom) values ('SAMPLE valid part', 'Nos')" },
   { label: "valid requirement", sql: "insert into public.requirements (rfi_number, status) values ('SAMPLE valid rfi', 'Received')" },

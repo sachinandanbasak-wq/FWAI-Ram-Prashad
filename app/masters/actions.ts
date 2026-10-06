@@ -1,7 +1,10 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+
+const CUSTOMER_STAGES = ["New", "Contacted", "Quoted", "Won"];
 
 /** Redirect back to a masters list with a message. Declared `never` so the
  *  compiler knows control does not continue past a validation failure. */
@@ -37,14 +40,32 @@ export async function createCustomer(formData: FormData): Promise<void> {
 
   const { error } = await supabase.from("customers").insert({
     name,
-    division: text(formData, "division"),
-    sub_division: text(formData, "sub_division"),
-    location: text(formData, "location"),
-    gst_number: text(formData, "gst_number"),
+    phone: text(formData, "phone"),
+    source: text(formData, "source"),
+    next_followup_date: text(formData, "next_followup_date"),
+    stage: "New",
   });
 
   if (error) back("/masters/customers", { error: friendly(error.message, error.code) });
+
+  revalidatePath("/masters/customers");
   back("/masters/customers", { saved: `Customer "${name}" saved.` });
+}
+
+export async function updateCustomerStage(formData: FormData): Promise<void> {
+  const id = String(formData.get("id") ?? "").trim();
+  const stage = String(formData.get("stage") ?? "").trim();
+
+  if (!id || !CUSTOMER_STAGES.includes(stage)) return;
+
+  const supabase = await createSupabaseServerClient();
+  if (!supabase) return;
+
+  const { error } = await supabase.from("customers").update({ stage }).eq("id", id);
+  if (error) return;
+
+  revalidatePath("/masters/customers");
+  revalidatePath("/follow-ups");
 }
 
 export async function createOem(formData: FormData): Promise<void> {

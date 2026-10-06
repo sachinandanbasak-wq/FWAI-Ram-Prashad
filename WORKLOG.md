@@ -153,3 +153,21 @@ Verified the markup -> `GET http://localhost:3000/demo -> 200 len=38239`; `flag-
 Reworked it to blow instead of shake -> `write components/IndianFlag.tsx` + `.flag-float` in globals.css -> removed the morphing noise filter and the rotate/skew tilt; the flag is now clipped to a travelling wave (`clipPath` + animated `d`, `calcMode="spline"`) anchored at the pole edge, with only a slow 1.5px lift outside
 
 Verified the calmer version -> `GET /demo -> 200 len=38453`; `flag-float: True`, `clipPath flagCloth: True`, `animated path d: True`, `keySplines: True`, `old noise filter gone: True`, 24 chakra spokes
+
+## Customer pipeline, Follow-ups Today, responsive fix
+
+Added customer fields -> `write supabase/migrations/0005_customer_pipeline.sql` -> phone, source (Call|WhatsApp|Referral), stage (New|Contacted|Quoted|Won), next_followup_date; CHECK constraints; also removed duplicate SAMPLE rows
+
+Checked counts before fixing -> `node scripts/counts.mjs` -> customers 4, oem_contacts 2, oem_certificates 2, products 4 (the seed had repeated itself)
+
+Made the seed idempotent -> `write supabase/seed.sql` (NOT EXISTS guards + pipeline fields) -> re-ran seed and `counts.mjs` -> customers 2, oem_contacts 1, oem_certificates 1, products 2 (no duplicates)
+
+Added the actions -> `app/masters/actions.ts` -> createCustomer (name/phone/source/follow-up) and updateCustomerStage, both with `revalidatePath`
+
+Built the UI -> `components/AddCustomerPanel.tsx` (Add Customer button + Save), `components/StageSelect.tsx` (saves on change), rewrote `app/masters/customers/page.tsx`, added `app/follow-ups/page.tsx`, set Follow-ups `ready: true`
+
+Fixed the mobile overflow -> `components/WorkspaceShell.tsx` -> the sidebar is an off-canvas drawer under `lg`, header wraps, `min-w-0`/`overflow-x-hidden` on the frame
+
+Extended the rule tests -> `node scripts/test-rules.mjs` -> now 24 cases (added bad source, bad stage, valid pipeline), `ALL RULES PASS`, exit 0
+
+Proved the flow in a real browser at 375px -> puppeteer on `/demo/customers` -> `form fields: {saveButton:true, sources:[Call,WhatsApp,Referral]}`, `row added -> true`, `stage after reload -> Won`, and `scrollWidth 375 = clientWidth 375` on `/demo/customers`, `/demo` and `/` (sideways scroll 0px, was 180px)

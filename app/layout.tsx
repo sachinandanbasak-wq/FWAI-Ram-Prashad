@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import "./globals.css";
-import { Sidebar } from "@/components/Sidebar";
-import { TricolourBar } from "@/components/Jet";
+import { WorkspaceShell } from "@/components/WorkspaceShell";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { signOut } from "@/app/auth/actions";
 
 export const metadata: Metadata = {
-  title: "Defence Contract CRM",
+  title: "Indian Defence CRM",
   description: "One requirement, one record, one timeline.",
 };
 
@@ -51,50 +48,9 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <TricolourBar className="h-1 w-full" />
-        <div className="flex min-h-[calc(100vh-0.25rem)]">
-          <Sidebar companyName={companyName} />
-
-          <div className="flex min-w-0 flex-1 flex-col">
-            <header className="flex items-center justify-between border-b border-edge bg-panel/60 px-6 py-3">
-              <div className="flex items-center gap-2 text-sm">
-                <span className="text-slate-300">
-                  {companyName ?? "Defence CRM"}
-                </span>
-                <span className="text-slate-600">/</span>
-                <span className="font-medium text-slate-100">Operations</span>
-              </div>
-
-              <div className="flex items-center gap-3 text-sm">
-                <Link href="/demo" className="nav-link">
-                  Demo evaluator
-                </Link>
-                {email ? (
-                  <>
-                    <span className="text-slate-300">{email}</span>
-                    <span className="pill-indication">{role ?? "no role"}</span>
-                    <form action={signOut}>
-                      <button type="submit" className="btn-ghost">
-                        Sign out
-                      </button>
-                    </form>
-                  </>
-                ) : (
-                  <Link href="/login" className="btn-primary">
-                    Sign in
-                  </Link>
-                )}
-              </div>
-            </header>
-
-            <main className="flex-1 px-6 py-6">{children}</main>
-
-            <footer className="border-t border-edge px-6 py-3 text-xs text-slate-500">
-              Records marked SAMPLE are placeholders only. No business figures are
-              shown unless they come from your own records.
-            </footer>
-          </div>
-        </div>
+        <WorkspaceShell companyName={companyName} email={email} role={role}>
+          {children}
+        </WorkspaceShell>
       </body>
     </html>
   );

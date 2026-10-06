@@ -46,6 +46,12 @@ Step 1.3 (Customer / OEM / Product masters): DONE at the database, BUILT at the 
   screens built: `/masters`, `/masters/customers`, `/masters/oems`, `/masters/products`; all four return `307` when signed out, so their rendered content is UNVERIFIED until a login exists.
   Excel export: DONE — `scripts/export-check.mjs` read 2 real rows, wrote a 6671-byte .xlsx, and re-opened it ("Customers", 3 rows including header). The route `/masters/export/[entity]` is built and returns `307` when signed out.
 
+Customer pipeline + Follow-ups + responsive fix: DONE
+  evidence: migration 0005 applied (phone/source/stage/next_followup_date + CHECKs); duplicate SAMPLE rows cleaned (customers 4 -> 2, products 4 -> 2).
+  rule tests: 24 cases, ALL RULES PASS.
+  browser check at 375px (puppeteer): Add Customer form shows Save + Call/WhatsApp/Referral; a saved customer appears in the list; a stage change to "Won" survives a reload; sideways scroll is 0px on /demo/customers, /demo and / (was 180px).
+  The real DB-backed Customers and Follow-ups screens return `307` when signed out, so their live persistence is UNVERIFIED until a login exists; the public demo proves the same UX.
+
 ## What broke and how I fixed it
 
 - `npm.ps1` blocked by execution policy -> used `npm.cmd` throughout.
