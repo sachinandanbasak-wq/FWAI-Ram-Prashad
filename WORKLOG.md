@@ -149,3 +149,7 @@ Verified the branding -> `GET http://localhost:3000/demo -> 200 len=34526`; `com
 Added an animated flag after the company name -> `write components/IndianFlag.tsx` + `.flag-float` keyframes in globals.css -> an SVG flag (saffron/white/green + 24-spoke Ashoka Chakra) warped by an animating SVG turbulence filter and floated by CSS (pivot at the left edge, continuous lift/tilt)
 
 Verified the markup -> `GET http://localhost:3000/demo -> 200 len=38239`; `flag-float: True`, `feTurbulence: True`, animated `baseFrequency: True`, `viewBox 0 0 60 40: True`, 24 chakra spokes, `aria-label="Indian flag"`
+
+Reworked it to blow instead of shake -> `write components/IndianFlag.tsx` + `.flag-float` in globals.css -> removed the morphing noise filter and the rotate/skew tilt; the flag is now clipped to a travelling wave (`clipPath` + animated `d`, `calcMode="spline"`) anchored at the pole edge, with only a slow 1.5px lift outside
+
+Verified the calmer version -> `GET /demo -> 200 len=38453`; `flag-float: True`, `clipPath flagCloth: True`, `animated path d: True`, `keySplines: True`, `old noise filter gone: True`, 24 chakra spokes

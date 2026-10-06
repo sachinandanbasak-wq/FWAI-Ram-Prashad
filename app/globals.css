@@ -54,22 +54,20 @@ body {
 .pill-late { @apply pill bg-red-500/15 text-red-300; }
 .pill-indication { @apply pill bg-slate-500/15 text-slate-300; }
 
-/* A flag that seems to float and flutter on the air. Pivots from its left edge,
-   as if attached to a pole, and drifts up/down and tilts continuously. */
+/* The flag is blown, not shaken. The cloth wave itself is drawn in the SVG (a
+   travelling wave clipped onto the flag); here we add only a slow, gentle lift so
+   it reads as airborne. No rotation or skew — those look like shaking. */
 @keyframes flag-float {
-  0% {
-    transform: translateY(0) rotate(-3deg) skewY(-2deg);
+  0%,
+  100% {
+    transform: translateY(0);
   }
   50% {
-    transform: translateY(-3px) rotate(3deg) skewY(2deg);
-  }
-  100% {
-    transform: translateY(0) rotate(-3deg) skewY(-2deg);
+    transform: translateY(-1.5px);
   }
 }
 
 .flag-float {
-  animation: flag-float 3.6s ease-in-out infinite;
-  transform-origin: left center;
+  animation: flag-float 5s ease-in-out infinite;
   filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.35));
 }
