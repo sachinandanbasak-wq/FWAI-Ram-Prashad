@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV } from "@/lib/navigation";
 import { Brand } from "@/components/Brand";
+import { IndianFlag } from "@/components/IndianFlag";
 import { Jet, TricolourBar } from "@/components/Jet";
 
 function isActive(pathname: string, href: string): boolean {
@@ -22,6 +23,7 @@ export function Sidebar({ companyName }: { companyName: string | null }) {
             <Jet className="h-5 w-5 text-accent" />
           </span>
           <Brand name={companyName} />
+          <IndianFlag className="h-4 w-6 shrink-0" />
         </div>
         <TricolourBar className="h-1 w-full" />
       </div>

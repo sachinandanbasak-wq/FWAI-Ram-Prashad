@@ -143,3 +143,9 @@ Wired the motif in -> sidebar brand shows the jet + tricolour name + a flag bar;
 Dev crashed on the OneDrive `.next` again -> `next dev` -> `EINVAL ... readlink '.next\\diagnostics'` (a production build had just created `.next`); fixed by clearing `.next` before `next dev`
 
 Verified the branding -> `GET http://localhost:3000/demo -> 200 len=34526`; `company name present: True`, `saffron gradient on Indian: True`, `green flag colour present: True`, `jet svg present: True`, 5 sample rows
+
+## Floating Indian flag
+
+Added an animated flag after the company name -> `write components/IndianFlag.tsx` + `.flag-float` keyframes in globals.css -> an SVG flag (saffron/white/green + 24-spoke Ashoka Chakra) warped by an animating SVG turbulence filter and floated by CSS (pivot at the left edge, continuous lift/tilt)
+
+Verified the markup -> `GET http://localhost:3000/demo -> 200 len=38239`; `flag-float: True`, `feTurbulence: True`, animated `baseFrequency: True`, `viewBox 0 0 60 40: True`, 24 chakra spokes, `aria-label="Indian flag"`
