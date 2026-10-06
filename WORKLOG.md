@@ -113,3 +113,19 @@ Build failed on one cast -> `npm.cmd run build` -> `Type error: ... route.ts:40 
 Build passed -> `npm.cmd run build` -> `✓ Compiled successfully`, route `/masters/export/[entity]` listed
 
 Tested export route protection -> `GET /masters/export/customers -> 307`, `/oems -> 307`, `/products -> 307`
+
+## Dark workspace (requested from the reference screenshot)
+
+Rebuilt the shell -> `write` tailwind.config.ts (dark palette), app/globals.css, lib/navigation.ts, components/Sidebar.tsx, app/layout.tsx -> dark theme, left module sidebar, top bar; modules not yet built show a "Soon" tag instead of a dead link
+
+Wrote migration 0004 -> `write supabase/migrations/0004_requirements.sql` -> requirements + requirement_lines, CHECK rules, unique rfi_number and line numbers, `v_requirement_overview` view (security_invoker), audit triggers, RLS (read signed-in, write Owner/Sales)
+
+Extended the rule tests -> `node --env-file=.env.local scripts/test-rules.mjs` -> 17 bad-data cases rejected (incl. blank RFI, bad status, deadline before receipt, quantity 0, duplicate line number), 5 good accepted, `ALL RULES PASS`, exit 0
+
+Applied and seeded -> `scripts/apply-migration.mjs 0004_requirements.sql` then `supabase/seed.sql` -> tables now include requirements, requirement_lines, v_requirement_overview; 5 SAMPLE requirements seeded
+
+Built the Requirements workspace -> `write components/RequirementsTable.tsx, app/requirements/page.tsx` -> search, status filter, record count, and an added "Next action" column (an improvement over the reference)
+
+Added a public demo evaluator -> `write app/demo/page.tsx` -> `/demo` needs no login and shows only embedded SAMPLE rows, so the workspace can be reviewed before auth is set up
+
+Built and verified -> `npm.cmd run build` -> routes `/demo`, `/requirements`, `/masters/*`, `/settings`; then `GET /demo -> 200 len=31463` with 5 distinct SAMPLE RFIs, SAMPLE DATA badge, red missing-information, status pills, and the sidebar; `GET /requirements -> 307`, `/settings -> 307`, `/masters -> 307`

@@ -22,7 +22,7 @@ export default async function ProductsPage({
     <div className="space-y-6">
       <section className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Products / Parts</h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-slate-100">Products / Parts</h1>
           <p className="mt-1 text-sm text-slate-600">
             Part master. Unit of measure is per line, because the same part can be
             quoted in Nos or Mtrs.
@@ -30,37 +30,37 @@ export default async function ProductsPage({
         </div>
         <a
           href="/masters/export/products"
-          className="rounded border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700"
+          className="btn-ghost"
         >
           Export to Excel
         </a>
       </section>
 
       {params.error && (
-        <p className="state-failed rounded-lg border p-4 text-sm">{params.error}</p>
+        <p className="state-failed p-4 text-sm">{params.error}</p>
       )}
       {params.saved && (
-        <p className="rounded-lg border border-green-300 bg-green-50 p-4 text-sm text-green-900">
+        <p className="rounded-lg border border-green-500/40 bg-green-500/10 p-4 text-sm text-green-200">
           {params.saved}
         </p>
       )}
 
       <form action={createProduct} className="card grid gap-3 sm:grid-cols-2">
-        <label className="text-sm font-medium text-slate-700 sm:col-span-2">
+        <label className="text-sm font-medium text-slate-300 sm:col-span-2">
           Description (required)
-          <input name="description" required className="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm" />
+          <input name="description" required className="field" />
         </label>
-        <label className="text-sm font-medium text-slate-700">
+        <label className="text-sm font-medium text-slate-300">
           Client part number
-          <input name="client_part_number" className="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm" />
+          <input name="client_part_number" className="field" />
         </label>
-        <label className="text-sm font-medium text-slate-700">
+        <label className="text-sm font-medium text-slate-300">
           OEM part number
-          <input name="oem_part_number" className="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm" />
+          <input name="oem_part_number" className="field" />
         </label>
-        <label className="text-sm font-medium text-slate-700">
+        <label className="text-sm font-medium text-slate-300">
           Unit of measure
-          <select name="uom" defaultValue="Nos" className="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm">
+          <select name="uom" defaultValue="Nos" className="field">
             <option>Nos</option>
             <option>Mtrs</option>
             <option>Kg</option>
@@ -68,20 +68,20 @@ export default async function ProductsPage({
             <option>Ltrs</option>
           </select>
         </label>
-        <label className="text-sm font-medium text-slate-700">
+        <label className="text-sm font-medium text-slate-300">
           HSN code
-          <input name="hsn_code" className="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm" />
+          <input name="hsn_code" className="field" />
         </label>
-        <label className="text-sm font-medium text-slate-700">
+        <label className="text-sm font-medium text-slate-300">
           Category
-          <input name="category" className="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm" />
+          <input name="category" className="field" />
         </label>
-        <label className="text-sm font-medium text-slate-700">
+        <label className="text-sm font-medium text-slate-300">
           Standard price (₹)
-          <input name="standard_price" type="number" min="0" step="0.01" className="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm" />
+          <input name="standard_price" type="number" min="0" step="0.01" className="field" />
         </label>
         <div className="flex items-end">
-          <button type="submit" className="rounded bg-ink px-4 py-2 text-sm font-medium text-white">
+          <button type="submit" className="btn-primary">
             Add part
           </button>
         </div>
@@ -97,7 +97,7 @@ export default async function ProductsPage({
         <div className="card overflow-x-auto">
           <table className="w-full border-collapse text-sm">
             <thead>
-              <tr className="border-b border-slate-200 text-left text-slate-500">
+              <tr className="border-b border-edge text-left text-slate-500">
                 <th className="py-2 pr-4">Description</th>
                 <th className="py-2 pr-4">Client part no.</th>
                 <th className="py-2 pr-4">OEM part no.</th>
@@ -107,12 +107,12 @@ export default async function ProductsPage({
             </thead>
             <tbody>
               {data.map((row) => (
-                <tr key={row.id} className="border-b border-slate-100">
-                  <td className="py-2 pr-4 font-medium text-slate-800">{row.description}</td>
-                  <td className="py-2 pr-4 text-slate-600">{row.client_part_number ?? "—"}</td>
-                  <td className="py-2 pr-4 text-slate-600">{row.oem_part_number ?? "—"}</td>
-                  <td className="py-2 pr-4 text-slate-600">{row.uom}</td>
-                  <td className="py-2 text-slate-600">
+                <tr key={row.id} className="border-b border-edge/70">
+                  <td className="py-2 pr-4 font-medium text-slate-100">{row.description}</td>
+                  <td className="py-2 pr-4 text-slate-300">{row.client_part_number ?? "—"}</td>
+                  <td className="py-2 pr-4 text-slate-300">{row.oem_part_number ?? "—"}</td>
+                  <td className="py-2 pr-4 text-slate-300">{row.uom}</td>
+                  <td className="py-2 text-slate-300">
                     {row.standard_price === null ? "—" : `₹ ${row.standard_price}`}
                   </td>
                 </tr>

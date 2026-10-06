@@ -16,13 +16,13 @@ export function MissingState({
   hint?: string;
 }) {
   return (
-    <div className="state-missing rounded-lg border p-5">
+    <div className="state-missing p-5">
       <p className="font-semibold">{title}</p>
       {items && items.length > 0 && (
         <ul className="mt-2 list-inside list-disc text-sm">
           {items.map((item) => (
             <li key={item}>
-              <code className="rounded bg-amber-100 px-1">{item}</code>
+              <code className="rounded bg-amber-500/15 px-1">{item}</code>
             </li>
           ))}
         </ul>
@@ -40,9 +40,9 @@ export function EmptyState({
   message: string;
 }) {
   return (
-    <div className="state-empty rounded-lg border border-dashed p-5">
-      <p className="font-semibold">{title}</p>
-      <p className="mt-1 text-sm text-slate-600">{message}</p>
+    <div className="state-empty p-5">
+      <p className="font-semibold text-slate-200">{title}</p>
+      <p className="mt-1 text-sm text-muted">{message}</p>
     </div>
   );
 }
@@ -55,7 +55,7 @@ export function FailedState({
   message: string;
 }) {
   return (
-    <div className="state-failed rounded-lg border p-5">
+    <div className="state-failed p-5">
       <p className="font-semibold">{title}</p>
       <p className="mt-1 text-sm">{message}</p>
     </div>

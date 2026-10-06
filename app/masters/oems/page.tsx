@@ -22,7 +22,7 @@ export default async function OemsPage({
     <div className="space-y-6">
       <section className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">OEM suppliers</h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-slate-100">OEM suppliers</h1>
           <p className="mt-1 text-sm text-slate-600">
             The manufacturers you source from. Commission % is per OEM and can be
             overridden per product later. Approval status needs an approval to change.
@@ -30,35 +30,35 @@ export default async function OemsPage({
         </div>
         <a
           href="/masters/export/oems"
-          className="rounded border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700"
+          className="btn-ghost"
         >
           Export to Excel
         </a>
       </section>
 
       {params.error && (
-        <p className="state-failed rounded-lg border p-4 text-sm">{params.error}</p>
+        <p className="state-failed p-4 text-sm">{params.error}</p>
       )}
       {params.saved && (
-        <p className="rounded-lg border border-green-300 bg-green-50 p-4 text-sm text-green-900">
+        <p className="rounded-lg border border-green-500/40 bg-green-500/10 p-4 text-sm text-green-200">
           {params.saved}
         </p>
       )}
 
       <form action={createOem} className="card grid gap-3 sm:grid-cols-2">
-        <label className="text-sm font-medium text-slate-700">
+        <label className="text-sm font-medium text-slate-300">
           OEM name (required)
-          <input name="name" required className="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm" />
+          <input name="name" required className="field" />
         </label>
-        <label className="text-sm font-medium text-slate-700">
+        <label className="text-sm font-medium text-slate-300">
           Country of origin
-          <input name="country_of_origin" className="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm" />
+          <input name="country_of_origin" className="field" />
         </label>
-        <label className="text-sm font-medium text-slate-700">
+        <label className="text-sm font-medium text-slate-300">
           Brand / category
-          <input name="brand_category" className="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm" />
+          <input name="brand_category" className="field" />
         </label>
-        <label className="text-sm font-medium text-slate-700">
+        <label className="text-sm font-medium text-slate-300">
           Commission % (0–100)
           <input
             name="commission_percent"
@@ -66,19 +66,19 @@ export default async function OemsPage({
             min="0"
             max="100"
             step="0.01"
-            className="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm"
+            className="field"
           />
         </label>
-        <label className="text-sm font-medium text-slate-700">
+        <label className="text-sm font-medium text-slate-300">
           Payment terms
-          <input name="payment_terms" className="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm" />
+          <input name="payment_terms" className="field" />
         </label>
-        <label className="flex items-center gap-2 self-end text-sm font-medium text-slate-700">
+        <label className="flex items-center gap-2 self-end text-sm font-medium text-slate-300">
           <input name="is_approved" type="checkbox" />
           Approved OEM
         </label>
         <div className="flex items-end">
-          <button type="submit" className="rounded bg-ink px-4 py-2 text-sm font-medium text-white">
+          <button type="submit" className="btn-primary">
             Add OEM
           </button>
         </div>
@@ -94,7 +94,7 @@ export default async function OemsPage({
         <div className="card overflow-x-auto">
           <table className="w-full border-collapse text-sm">
             <thead>
-              <tr className="border-b border-slate-200 text-left text-slate-500">
+              <tr className="border-b border-edge text-left text-slate-500">
                 <th className="py-2 pr-4">Name</th>
                 <th className="py-2 pr-4">Origin</th>
                 <th className="py-2 pr-4">Category</th>
@@ -104,18 +104,18 @@ export default async function OemsPage({
             </thead>
             <tbody>
               {data.map((row) => (
-                <tr key={row.id} className="border-b border-slate-100">
-                  <td className="py-2 pr-4 font-medium text-slate-800">{row.name}</td>
-                  <td className="py-2 pr-4 text-slate-600">{row.country_of_origin ?? "—"}</td>
-                  <td className="py-2 pr-4 text-slate-600">{row.brand_category ?? "—"}</td>
-                  <td className="py-2 pr-4 text-slate-600">
+                <tr key={row.id} className="border-b border-edge/70">
+                  <td className="py-2 pr-4 font-medium text-slate-100">{row.name}</td>
+                  <td className="py-2 pr-4 text-slate-300">{row.country_of_origin ?? "—"}</td>
+                  <td className="py-2 pr-4 text-slate-300">{row.brand_category ?? "—"}</td>
+                  <td className="py-2 pr-4 text-slate-300">
                     {row.commission_percent === null ? "—" : `${row.commission_percent}%`}
                   </td>
                   <td className="py-2">
                     {row.is_approved ? (
-                      <span className="rounded bg-green-100 px-1.5 py-0.5 text-xs text-green-800">Approved</span>
+                      <span className="pill-track">Approved</span>
                     ) : (
-                      <span className="rounded bg-amber-100 px-1.5 py-0.5 text-xs text-amber-800">Not approved</span>
+                      <span className="pill-risk">Not approved</span>
                     )}
                   </td>
                 </tr>

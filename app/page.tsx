@@ -19,10 +19,13 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8">
       <section>
-        <h1 className="text-2xl font-semibold tracking-tight">Morning view</h1>
-        <p className="mt-1 text-sm text-slate-600">
-          The working dashboard is built in Phase 7. This shell is Step 1.1 of
-          Phase 1, so the tiles below are placeholders and carry no figures.
+        <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+          Operations / Morning view
+        </p>
+        <h1 className="mt-1 text-3xl font-semibold tracking-tight">Dashboard</h1>
+        <p className="mt-1 text-sm text-muted">
+          The live figures arrive in Phase 7. The tiles below are placeholders and
+          carry no numbers.
         </p>
       </section>
 
@@ -30,38 +33,45 @@ export default function DashboardPage() {
         <MissingState
           title="A setting is missing"
           items={config.missing}
-          hint="Add these to .env.local (see .env.example) and restart. Until then the database cannot be reached."
+          hint="Add these to .env.local (see .env.example) and restart."
         />
       )}
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {MORNING_VIEW.map((tile) => (
           <div key={tile} className="card">
-            <p className="text-sm font-medium text-slate-800">{tile}</p>
-            <p className="mt-3 text-2xl font-semibold text-slate-300">—</p>
-            <p className="mt-1 text-xs text-slate-500">No data yet</p>
+            <p className="text-sm font-medium text-slate-200">{tile}</p>
+            <p className="mt-3 text-2xl font-semibold text-slate-600">—</p>
+            <p className="mt-1 text-xs text-muted">No data yet</p>
           </div>
         ))}
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold">Requirements</h2>
-        <p className="mb-3 mt-1 text-sm text-slate-600">
+        <h2 className="text-lg font-semibold text-slate-100">Try it</h2>
+        <p className="mb-3 mt-1 text-sm text-muted">
+          Open the Requirements workspace, or the demo evaluator with SAMPLE rows.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <Link href="/requirements" className="btn-primary">
+            Requirements
+          </Link>
+          <Link href="/demo" className="btn-ghost">
+            Demo evaluator
+          </Link>
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold text-slate-100">Requirements</h2>
+        <p className="mb-3 mt-1 text-sm text-muted">
           The requirement is the root record. Everything else hangs off it.
         </p>
         <EmptyState
-          title="No requirements yet"
-          message="Once Phase 1 is connected to the database, every enquiry you capture appears here. Nothing is shown until you enter it — no example rows."
+          title="No requirements loaded"
+          message="Sign in to see your real requirements, or open the demo evaluator to see SAMPLE rows."
         />
       </section>
-
-      <p className="text-sm text-slate-600">
-        Next: check the{" "}
-        <Link href="/settings" className="font-medium text-track underline">
-          Settings
-        </Link>{" "}
-        screen.
-      </p>
     </div>
   );
 }

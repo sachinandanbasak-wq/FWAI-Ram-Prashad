@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
+import { Sidebar } from "@/components/Sidebar";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { signOut } from "@/app/auth/actions";
 
@@ -18,11 +19,13 @@ export default async function RootLayout({
 
   let email: string | null = null;
   let role: string | null = null;
+  let companyName: string | null = null;
 
   if (supabase) {
     const {
       data: { user },
     } = await supabase.auth.getUser();
+
     if (user) {
       email = user.email ?? null;
       const { data: profile } = await supabase
@@ -32,53 +35,64 @@ export default async function RootLayout({
         .maybeSingle();
       role = (profile as { role?: string } | null)?.role ?? null;
     }
+
+    const { data: setting } = await supabase
+      .from("settings")
+      .select("value")
+      .eq("key", "company_name")
+      .maybeSingle();
+    const value = (setting as { value?: unknown } | null)?.value;
+    if (typeof value === "string" && value.trim().length > 0) {
+      companyName = value;
+    }
   }
 
   return (
     <html lang="en">
       <body>
-        <header className="bg-ink text-white">
-          <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-            <Link href="/" className="text-base font-semibold tracking-tight">
-              Defence Contract CRM
-            </Link>
-            <nav className="flex items-center gap-1">
-              <Link href="/" className="nav-link">
-                Dashboard
-              </Link>
-              <Link href="/masters" className="nav-link">
-                Masters
-              </Link>
-              <Link href="/settings" className="nav-link">
-                Settings
-              </Link>
-              {email ? (
-                <div className="ml-2 flex items-center gap-2 border-l border-white/20 pl-3">
-                  <span className="text-xs text-slate-300">
-                    {email}
-                    <span className="ml-1 rounded bg-white/10 px-1.5 py-0.5">
-                      {role ?? "no role"}
-                    </span>
-                  </span>
-                  <form action={signOut}>
-                    <button type="submit" className="nav-link">
-                      Sign out
-                    </button>
-                  </form>
-                </div>
-              ) : (
-                <Link href="/login" className="nav-link">
-                  Sign in
+        <div className="flex min-h-screen">
+          <Sidebar companyName={companyName} />
+
+          <div className="flex min-w-0 flex-1 flex-col">
+            <header className="flex items-center justify-between border-b border-edge bg-panel/60 px-6 py-3">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-slate-300">
+                  {companyName ?? "Defence CRM"}
+                </span>
+                <span className="text-slate-600">/</span>
+                <span className="font-medium text-slate-100">Operations</span>
+              </div>
+
+              <div className="flex items-center gap-3 text-sm">
+                <Link href="/demo" className="nav-link">
+                  Demo evaluator
                 </Link>
-              )}
-            </nav>
+                {email ? (
+                  <>
+                    <span className="text-slate-300">{email}</span>
+                    <span className="pill-indication">{role ?? "no role"}</span>
+                    <form action={signOut}>
+                      <button type="submit" className="btn-ghost">
+                        Sign out
+                      </button>
+                    </form>
+                  </>
+                ) : (
+                  <Link href="/login" className="btn-primary">
+                    Sign in
+                  </Link>
+                )}
+              </div>
+            </header>
+
+            <main className="flex-1 px-6 py-6">{children}</main>
+
+            <footer className="border-t border-edge px-6 py-3 text-xs text-slate-500">
+              Records marked SAMPLE are placeholders only. No business figures are
+              shown unless they come from your own records.
+            </footer>
           </div>
-        </header>
-        <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
-        <footer className="mx-auto max-w-6xl px-4 pb-8 text-xs text-slate-500">
-          Sample rows are always labelled SAMPLE. No business figures are shown
-          unless they come from your own records.
-        </footer>
+        </div>
       </body>
     </html>
   );

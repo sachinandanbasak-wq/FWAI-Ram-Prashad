@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { readConfig } from "@/lib/config";
 
-const PROTECTED_PREFIXES = ["/settings", "/masters"];
+const PROTECTED_PREFIXES = ["/settings", "/masters", "/requirements"];
 
 /**
  * Refreshes the auth session on every request and keeps signed-out users away

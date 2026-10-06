@@ -22,7 +22,7 @@ export default async function CustomersPage({
     <div className="space-y-6">
       <section className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Customers</h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-slate-100">Customers</h1>
           <p className="mt-1 text-sm text-slate-600">
             Agencies that send requirements. A name is required; everything else can
             be filled in later.
@@ -30,44 +30,44 @@ export default async function CustomersPage({
         </div>
         <a
           href="/masters/export/customers"
-          className="rounded border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700"
+          className="btn-ghost"
         >
           Export to Excel
         </a>
       </section>
 
       {params.error && (
-        <p className="state-failed rounded-lg border p-4 text-sm">{params.error}</p>
+        <p className="state-failed p-4 text-sm">{params.error}</p>
       )}
       {params.saved && (
-        <p className="rounded-lg border border-green-300 bg-green-50 p-4 text-sm text-green-900">
+        <p className="rounded-lg border border-green-500/40 bg-green-500/10 p-4 text-sm text-green-200">
           {params.saved}
         </p>
       )}
 
       <form action={createCustomer} className="card grid gap-3 sm:grid-cols-2">
-        <label className="text-sm font-medium text-slate-700">
+        <label className="text-sm font-medium text-slate-300">
           Name (required)
-          <input name="name" required className="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm" />
+          <input name="name" required className="field" />
         </label>
-        <label className="text-sm font-medium text-slate-700">
+        <label className="text-sm font-medium text-slate-300">
           Division
-          <input name="division" className="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm" />
+          <input name="division" className="field" />
         </label>
-        <label className="text-sm font-medium text-slate-700">
+        <label className="text-sm font-medium text-slate-300">
           Sub-division
-          <input name="sub_division" className="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm" />
+          <input name="sub_division" className="field" />
         </label>
-        <label className="text-sm font-medium text-slate-700">
+        <label className="text-sm font-medium text-slate-300">
           Location
-          <input name="location" className="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm" />
+          <input name="location" className="field" />
         </label>
-        <label className="text-sm font-medium text-slate-700">
+        <label className="text-sm font-medium text-slate-300">
           GST number
-          <input name="gst_number" className="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm" />
+          <input name="gst_number" className="field" />
         </label>
         <div className="flex items-end">
-          <button type="submit" className="rounded bg-ink px-4 py-2 text-sm font-medium text-white">
+          <button type="submit" className="btn-primary">
             Add customer
           </button>
         </div>
@@ -83,7 +83,7 @@ export default async function CustomersPage({
         <div className="card overflow-x-auto">
           <table className="w-full border-collapse text-sm">
             <thead>
-              <tr className="border-b border-slate-200 text-left text-slate-500">
+              <tr className="border-b border-edge text-left text-slate-500">
                 <th className="py-2 pr-4">Name</th>
                 <th className="py-2 pr-4">Division</th>
                 <th className="py-2 pr-4">Sub-division</th>
@@ -93,12 +93,12 @@ export default async function CustomersPage({
             </thead>
             <tbody>
               {data.map((row) => (
-                <tr key={row.id} className="border-b border-slate-100">
-                  <td className="py-2 pr-4 font-medium text-slate-800">{row.name}</td>
-                  <td className="py-2 pr-4 text-slate-600">{row.division ?? "—"}</td>
-                  <td className="py-2 pr-4 text-slate-600">{row.sub_division ?? "—"}</td>
-                  <td className="py-2 pr-4 text-slate-600">{row.location ?? "—"}</td>
-                  <td className="py-2 text-slate-600">{row.gst_number ?? "—"}</td>
+                <tr key={row.id} className="border-b border-edge/70">
+                  <td className="py-2 pr-4 font-medium text-slate-100">{row.name}</td>
+                  <td className="py-2 pr-4 text-slate-300">{row.division ?? "—"}</td>
+                  <td className="py-2 pr-4 text-slate-300">{row.sub_division ?? "—"}</td>
+                  <td className="py-2 pr-4 text-slate-300">{row.location ?? "—"}</td>
+                  <td className="py-2 text-slate-300">{row.gst_number ?? "—"}</td>
                 </tr>
               ))}
             </tbody>

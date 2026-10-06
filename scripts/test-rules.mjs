@@ -29,6 +29,11 @@ const MUST_REJECT = [
   { label: "product description empty", sql: "insert into public.products (description) values ('')" },
   { label: "product UoM only spaces", sql: "insert into public.products (description, uom) values ('SAMPLE part', '   ')" },
   { label: "product negative price", sql: "insert into public.products (description, standard_price) values ('SAMPLE part', -10)" },
+  { label: "requirement rfi_number blank", sql: "insert into public.requirements (rfi_number) values ('')" },
+  { label: "requirement status not in list", sql: "insert into public.requirements (rfi_number, status) values ('SAMPLE bad status', 'Nonsense')" },
+  { label: "requirement deadline before received date", sql: "insert into public.requirements (rfi_number, received_date, submission_deadline) values ('SAMPLE bad dates', '2026-01-10', '2026-01-05')" },
+  { label: "requirement line quantity zero", sql: "insert into public.requirements (rfi_number) values ('SAMPLE line host'); insert into public.requirement_lines (requirement_id, line_number, part_description, quantity) select id, 1, 'SAMPLE part', 0 from public.requirements where rfi_number = 'SAMPLE line host'" },
+  { label: "requirement line duplicate line number", sql: "insert into public.requirements (rfi_number) values ('SAMPLE dup host'); insert into public.requirement_lines (requirement_id, line_number, part_description, quantity) select id, 1, 'SAMPLE a', 1 from public.requirements where rfi_number = 'SAMPLE dup host'; insert into public.requirement_lines (requirement_id, line_number, part_description, quantity) select id, 1, 'SAMPLE b', 1 from public.requirements where rfi_number = 'SAMPLE dup host'" },
 ];
 
 /** Each case is data that MUST be accepted. */
@@ -36,6 +41,8 @@ const MUST_ACCEPT = [
   { label: "valid customer", sql: "insert into public.customers (name) values ('SAMPLE valid customer')" },
   { label: "valid OEM", sql: "insert into public.oems (name, commission_percent) values ('SAMPLE valid oem', 5)" },
   { label: "valid product", sql: "insert into public.products (description, uom) values ('SAMPLE valid part', 'Nos')" },
+  { label: "valid requirement", sql: "insert into public.requirements (rfi_number, status) values ('SAMPLE valid rfi', 'Received')" },
+  { label: "valid requirement line", sql: "insert into public.requirements (rfi_number) values ('SAMPLE valid rfi 2'); insert into public.requirement_lines (requirement_id, line_number, part_description, quantity, uom) select id, 1, 'SAMPLE valid part', 5, 'Nos' from public.requirements where rfi_number = 'SAMPLE valid rfi 2'" },
 ];
 
 const client = new Client({ connectionString: url, ssl: { rejectUnauthorized: false } });

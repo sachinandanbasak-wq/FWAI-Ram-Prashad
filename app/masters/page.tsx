@@ -6,7 +6,7 @@ import { readConfig } from "@/lib/config";
 export const dynamic = "force-dynamic";
 
 const MASTERS = [
-  { table: "customers", label: "Customers", href: "/masters/customers", blurb: "Government and defence agencies, with division and sub-division." },
+  { table: "customers", label: "Customers", href: "/masters/customers", blurb: "Agencies that send requirements, with division and sub-division." },
   { table: "oems", label: "OEM suppliers", href: "/masters/oems", blurb: "Manufacturers you source from, with commission % and approval status." },
   { table: "products", label: "Products / Parts", href: "/masters/products", blurb: "Part numbers (client and OEM), UoM, HSN and standard price." },
 ] as const;
@@ -18,7 +18,7 @@ export default async function MastersPage() {
   if (!config.configured || !supabase) {
     return (
       <div className="space-y-6">
-        <h1 className="text-2xl font-semibold tracking-tight">Masters</h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-100">Masters</h1>
         <MissingState
           title="A setting is missing, so masters cannot be loaded"
           items={config.configured ? [] : config.missing}
@@ -40,8 +40,11 @@ export default async function MastersPage() {
   return (
     <div className="space-y-6">
       <section>
-        <h1 className="text-2xl font-semibold tracking-tight">Masters</h1>
-        <p className="mt-1 text-sm text-slate-600">
+        <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+          Data / Masters
+        </p>
+        <h1 className="mt-1 text-3xl font-semibold tracking-tight">Masters</h1>
+        <p className="mt-1 text-sm text-muted">
           The lists every requirement points at. Records marked SAMPLE are
           placeholders only and are never used in reports.
         </p>
@@ -59,10 +62,10 @@ export default async function MastersPage() {
 
       <section className="grid gap-4 sm:grid-cols-3">
         {MASTERS.map((master) => (
-          <Link key={master.table} href={master.href} className="card block">
-            <p className="text-sm font-semibold text-slate-800">{master.label}</p>
-            <p className="mt-3 text-3xl font-semibold text-ink">{counts[master.table]}</p>
-            <p className="mt-2 text-xs text-slate-500">{master.blurb}</p>
+          <Link key={master.table} href={master.href} className="card block hover:border-accent/50">
+            <p className="text-sm font-semibold text-slate-100">{master.label}</p>
+            <p className="mt-3 text-3xl font-semibold text-accent">{counts[master.table]}</p>
+            <p className="mt-2 text-xs text-muted">{master.blurb}</p>
           </Link>
         ))}
       </section>

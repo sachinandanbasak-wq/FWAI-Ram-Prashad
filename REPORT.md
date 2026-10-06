@@ -35,6 +35,11 @@ Step 1.2 (login, roles, route protection): BUILT, signed-in path UNVERIFIED
   evidence: build passes with `Middleware`; `GET /login -> 200` (form present), `GET /settings -> 307` when signed out.
   signed-in login, role display and role-based write: UNVERIFIED — no auth user exists; the user chose to skip sign-in verification for now.
 
+Step 1.1b (dark workspace shell + Requirements screen): DONE for the public demo
+  evidence: `GET /demo -> 200 len=31463`; 5 distinct SAMPLE RFIs rendered; SAMPLE DATA badge; red missing-information; "Next action" column; sidebar with planned modules tagged "Soon".
+  migration 0004 applied (requirements, requirement_lines, v_requirement_overview); rule tests now 17 rejected / 5 accepted, ALL PASS.
+  The authenticated `/requirements` screen returns `307` when signed out, so its DB-backed rendering is UNVERIFIED until a login exists.
+
 Step 1.3 (Customer / OEM / Product masters): DONE at the database, BUILT at the screen
   evidence: migration 0003 applied — `customers, oem_certificates, oem_contacts, oems, products` now exist.
   rules proven: `node scripts/test-rules.mjs` -> 12 bad-data cases rejected (`23514`/`23503`), 3 good accepted, `ALL RULES PASS`, exit 0.

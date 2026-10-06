@@ -14,8 +14,8 @@ export default async function LoginPage({
 
   return (
     <div className="mx-auto max-w-sm">
-      <h1 className="text-2xl font-semibold tracking-tight">Sign in</h1>
-      <p className="mt-1 text-sm text-slate-600">
+      <h1 className="text-2xl font-semibold tracking-tight text-slate-100">Sign in</h1>
+      <p className="mt-1 text-sm text-muted">
         Use the email and password the Owner created for you.
       </p>
 
@@ -29,37 +29,24 @@ export default async function LoginPage({
         </div>
       )}
 
-      {params.error && (
-        <p className="state-failed mt-4 rounded-lg border p-4 text-sm">
-          {params.error}
-        </p>
-      )}
+      {params.error && <p className="state-failed mt-4 p-4 text-sm">{params.error}</p>}
 
       <form action={signIn} className="card mt-4 space-y-4">
-        <label className="block text-sm font-medium text-slate-700">
+        <label className="block text-sm font-medium text-slate-300">
           Email
-          <input
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-            className="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm"
-          />
+          <input name="email" type="email" autoComplete="email" required className="field" />
         </label>
-        <label className="block text-sm font-medium text-slate-700">
+        <label className="block text-sm font-medium text-slate-300">
           Password
           <input
             name="password"
             type="password"
             autoComplete="current-password"
             required
-            className="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm"
+            className="field"
           />
         </label>
-        <button
-          type="submit"
-          className="w-full rounded bg-ink px-3 py-2 text-sm font-medium text-white"
-        >
+        <button type="submit" className="btn-primary w-full">
           Sign in
         </button>
       </form>
