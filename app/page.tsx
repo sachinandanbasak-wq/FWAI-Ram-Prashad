@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { readConfig } from "@/lib/config";
 import { EmptyState, MissingState } from "@/components/States";
+import { Jet } from "@/components/Jet";
 
 const MORNING_VIEW = [
   "Open orders by stage",
@@ -18,15 +19,18 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <section>
-        <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-          Operations / Morning view
-        </p>
-        <h1 className="mt-1 text-3xl font-semibold tracking-tight">Dashboard</h1>
-        <p className="mt-1 text-sm text-muted">
-          The live figures arrive in Phase 7. The tiles below are placeholders and
-          carry no numbers.
-        </p>
+      <section className="card flex items-center justify-between gap-6 overflow-hidden">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            Operations / Morning view
+          </p>
+          <h1 className="mt-1 text-3xl font-semibold tracking-tight">Dashboard</h1>
+          <p className="mt-1 text-sm text-muted">
+            The live figures arrive in Phase 7. The tiles below are placeholders and
+            carry no numbers.
+          </p>
+        </div>
+        <Jet className="h-24 w-24 shrink-0 text-accent/30" />
       </section>
 
       {!config.configured && (

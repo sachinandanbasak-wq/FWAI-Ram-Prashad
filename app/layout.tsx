@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
 import { Sidebar } from "@/components/Sidebar";
+import { TricolourBar } from "@/components/Jet";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { signOut } from "@/app/auth/actions";
 
@@ -50,7 +51,8 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="flex min-h-screen">
+        <TricolourBar className="h-1 w-full" />
+        <div className="flex min-h-[calc(100vh-0.25rem)]">
           <Sidebar companyName={companyName} />
 
           <div className="flex min-w-0 flex-1 flex-col">

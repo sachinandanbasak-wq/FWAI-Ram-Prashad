@@ -129,3 +129,17 @@ Built the Requirements workspace -> `write components/RequirementsTable.tsx, app
 Added a public demo evaluator -> `write app/demo/page.tsx` -> `/demo` needs no login and shows only embedded SAMPLE rows, so the workspace can be reviewed before auth is set up
 
 Built and verified -> `npm.cmd run build` -> routes `/demo`, `/requirements`, `/masters/*`, `/settings`; then `GET /demo -> 200 len=31463` with 5 distinct SAMPLE RFIs, SAMPLE DATA badge, red missing-information, status pills, and the sidebar; `GET /requirements -> 307`, `/settings -> 307`, `/masters -> 307`
+
+## Branding: Indian Defence CRM + jet + tricolour
+
+Wrote a reusable setting updater -> `write scripts/set-setting.mjs` -> sets one settings row as JSON
+
+Wrote the defence motif -> `write components/Jet.tsx` (fighter-jet SVG + TricolourBar), `components/Brand.tsx` (first word painted saffron -> white -> green)
+
+Set the company name -> `node --env-file=.env.local scripts/set-setting.mjs company_name "Indian Defence CRM"` -> `set company_name = "Indian Defence CRM"`
+
+Wired the motif in -> sidebar brand shows the jet + tricolour name + a flag bar; a tricolour bar runs along the top of every page; the dashboard hero and the demo header carry a jet silhouette
+
+Dev crashed on the OneDrive `.next` again -> `next dev` -> `EINVAL ... readlink '.next\\diagnostics'` (a production build had just created `.next`); fixed by clearing `.next` before `next dev`
+
+Verified the branding -> `GET http://localhost:3000/demo -> 200 len=34526`; `company name present: True`, `saffron gradient on Indian: True`, `green flag colour present: True`, `jet svg present: True`, 5 sample rows

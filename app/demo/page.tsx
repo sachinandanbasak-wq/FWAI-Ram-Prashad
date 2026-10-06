@@ -1,4 +1,5 @@
 import { RequirementsTable, type RequirementRow } from "@/components/RequirementsTable";
+import { Jet } from "@/components/Jet";
 
 // Public demo. Uses embedded SAMPLE rows only — no database, no login, no real
 // records. This is what lets the workspace be evaluated before the owner signs in.
@@ -79,9 +80,12 @@ export default function DemoPage() {
             information before quoting.
           </p>
         </div>
-        <span className="rounded-full border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-200">
-          SAMPLE DATA — no login required
-        </span>
+        <div className="flex items-center gap-4">
+          <Jet className="h-12 w-12 text-accent/40" />
+          <span className="rounded-full border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-200">
+            SAMPLE DATA — no login required
+          </span>
+        </div>
       </section>
 
       <RequirementsTable rows={SAMPLE_REQUIREMENTS} sample />

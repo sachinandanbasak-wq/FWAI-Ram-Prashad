@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV } from "@/lib/navigation";
+import { Brand } from "@/components/Brand";
+import { Jet, TricolourBar } from "@/components/Jet";
 
 function isActive(pathname: string, href: string): boolean {
   if (href === "/") return pathname === "/";
@@ -14,13 +16,14 @@ export function Sidebar({ companyName }: { companyName: string | null }) {
 
   return (
     <aside className="flex w-60 shrink-0 flex-col border-r border-edge bg-panel">
-      <div className="flex items-center gap-2 border-b border-edge px-5 py-4">
-        <span className="flex h-8 w-8 items-center justify-center rounded-md bg-accent text-sm font-bold text-white">
-          {(companyName ?? "Defence CRM").slice(0, 2).toUpperCase()}
-        </span>
-        <span className="text-sm font-semibold text-slate-100">
-          {companyName ?? "Company name not set"}
-        </span>
+      <div className="border-b border-edge">
+        <div className="flex items-center gap-2 px-5 py-4">
+          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-accent/15 ring-1 ring-inset ring-accent/40">
+            <Jet className="h-5 w-5 text-accent" />
+          </span>
+          <Brand name={companyName} />
+        </div>
+        <TricolourBar className="h-1 w-full" />
       </div>
 
       <div className="mx-3 mt-3 rounded-lg border border-edge bg-panel2 p-3">
